@@ -11,7 +11,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -19,56 +18,55 @@ import java.util.HashMap;
  * @author German
  */
 public class Archivo {
-    public HashMap<Integer,Persona> listaPersona;
+
+    public HashMap<Integer, Persona> listaPersona;
     private static final String ruta = "archivo.txt";
 
-    
     public Archivo() {
-       validarArchivo();
+        validarArchivo();
     }
 
-    private void validarArchivo(){
-     try {
-            
+    private void validarArchivo() {
+
+        try {
             File file = new File(ruta);
-           
+
             if (!file.exists()) {
                 file.createNewFile();
-                listaPersona=new HashMap<>();
+                listaPersona = new HashMap<>();
                 guardarRegistro(listaPersona);
-               
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Se ha producido un error al abrir e archivo");
+            e.getMessage();
         }
-     
-    
+
     }
- 
-    public HashMap<Integer,Persona> obtenerListasActuales() {
-        listaPersona=new HashMap<>();
-       
+
+    public HashMap<Integer, Persona> obtenerListasActuales() {
+        listaPersona = new HashMap<>();
+
         try {
-            ObjectInputStream entrada =  new ObjectInputStream(new FileInputStream(ruta));
-            listaPersona = (HashMap<Integer,Persona>) entrada.readObject();
-  
-        } catch (IOException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        } 
-        
+            ObjectInputStream entrada = new ObjectInputStream(new FileInputStream(ruta));
+            listaPersona = (HashMap<Integer, Persona>) entrada.readObject();
+
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Se ha producido un error al abrir e archivo");
+            e.getMessage();
+        }
+
         return listaPersona;
     }
- 
-    
-       public void guardarRegistro(HashMap<Integer,Persona> lista) {
-           
+
+    public void guardarRegistro(HashMap<Integer, Persona> lista) {
+
         try {
             ObjectOutputStream salida = new ObjectOutputStream(new FileOutputStream(ruta));
             salida.writeObject(lista);
             salida.close();
-        } catch (IOException ex) {
-            System.err.println("Error!!!!!");
-            ex.printStackTrace();
+        } catch (IOException e) {
+            System.err.println("Se ha producido un error al abrir e archivo");
+            e.getMessage();
         }
     }
 }

@@ -5,17 +5,14 @@
  */
 package com.mycompany.datacredito;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Scanner;
 
 /**
  *
  * @author German
  */
-public class Principal implements Serializable {
+public class Principal {
 
     private HashMap<Integer, Persona> listaPersonas = new HashMap<>();
 
@@ -27,23 +24,25 @@ public class Principal implements Serializable {
     public void principal() {
 
         Scanner sc = new Scanner(System.in);
-        boolean valida = true;
         int opcion = 0;
+
         do {
+            boolean valida = true;
             System.out.println("DataCredito");
             System.out.println("1. Agregar personas.");
             System.out.println("2. Agregar reporte.");
             System.out.println("3. Eliminar reporte.");
             System.out.println("4. Listar.");
 
-            do {
+            //opcion = v.validaNumero(sc.next());
+            while (valida) {
                 try {
-                    opcion = sc.nextInt();
+                    opcion = Integer.parseInt(sc.next());
+                    valida = false;
                 } catch (NumberFormatException e) {
                     System.err.println("Numero inválido");
-                    valida = false;
                 }
-            } while (!valida);
+            }
 
             switch (opcion) {
                 case 1:
@@ -51,10 +50,13 @@ public class Principal implements Serializable {
                     break;
                 case 2:
                     agregarReporte();
+                    break;
                 case 3:
                     eliminarReporte();
+                    break;
                 case 4:
                     listarPersonas();
+                    break;
             }
         } while (opcion < 5);
         System.out.println("Opcion Incorrecta!!!!!");
@@ -93,7 +95,30 @@ public class Principal implements Serializable {
     }
 
     private void eliminarReporte() {
-        
+
+        Scanner sc = new Scanner(System.in);
+        Archivo archivo = new Archivo();
+        int codUsuario, codReporte;
+        System.out.println("Codigo del usuario:");
+        codUsuario = sc.nextInt();
+        if (listaPersonas.containsKey(codUsuario)) {
+            System.out.println("Codigo del reporte:");
+            codReporte = sc.nextInt();
+            if (listaPersonas.get(codUsuario).getListaReportes().containsKey(codReporte)) {
+                Record reporte = listaPersonas.get(codUsuario).getListaReportes().get(codReporte);
+                if (!reporte.isEstado()) {
+                    listaPersonas.get(codUsuario).getListaReportes().remove(codReporte);
+                    archivo.guardarRegistro(listaPersonas);
+                    System.out.println("El reporte ha sido eliminado del sistema.");
+                } else {
+                    System.out.println("No se puede eliminar un reporte positivo del sistema.");
+                }
+            } else {
+                System.out.println("Reporte no existe.");
+            }
+        } else {
+            System.out.println("El usuario no existe.");
+        }
     }
 
     private void listarPersonas() {
@@ -106,7 +131,7 @@ public class Principal implements Serializable {
             try {
                 HashMap<Integer, Record> listaRecord = listaPersonas.get(persona).getListaReportes();
                 for (Integer key : listaRecord.keySet()) {
-                    System.out.println(listaRecord.get(key).getCodigo() + " " + listaRecord.get(key).getEmpresa() + " "
+                    System.out.println("\t" + listaRecord.get(key).getCodigo() + " " + listaRecord.get(key).getEmpresa() + " "
                             + listaRecord.get(key).getDescripcion() + " " + listaRecord.get(key).isEstado() + " " + listaRecord.get(key).getValor());
                 }
             } catch (Exception e) {
@@ -134,7 +159,7 @@ public class Principal implements Serializable {
         valor = sc.nextDouble();
 
         Record record = new Record(codigo, empresa, descripcion, estado, valor);
-        listaPersonas.get(documento).getListaReportes().put(codigo, record);        
+        listaPersonas.get(documento).getListaReportes().put(codigo, record);
         archivo.guardarRegistro(listaPersonas);
     }
 
