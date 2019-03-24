@@ -11,8 +11,8 @@ import java.io.Serializable;
  *
  * @author German
  */
-public class Record implements Serializable{
-    
+public class Record implements Serializable {
+
     private int codigo;
     private String empresa;
     private String descripcion;
@@ -66,6 +66,5 @@ public class Record implements Serializable{
     public void setValor(double valor) {
         this.valor = valor;
     }
-    
-    
+
 }

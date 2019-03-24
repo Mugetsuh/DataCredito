@@ -65,7 +65,7 @@ public class Archivo {
             salida.writeObject(lista);
             salida.close();
         } catch (IOException e) {
-            System.err.println("Se ha producido un error al abrir e archivo");
+            System.err.println("Se ha producido un error al abrir el archivo");
             e.getMessage();
         }
     }
